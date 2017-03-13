@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+{% block title %}{{ blog.title }}{% endblock %}
+
+{% block content %}
+   <div style="background: #eee; padding: 15px;">
+       <div><h2>{{ blog.title }}</h2></div>
+       <div><b>{{ blog.author }}</b>, {{ blog.created_at }}</div>
+       <div>Last updated at {{ blog.updated_at }}</div>
+       <br>
+       <div>{{ blog.description }}</div>
+   </div>
+   <a href="/blogs/">Back</a>
+   <hr>
+
+   {% for post in object.post_set.all %}
+        <div>
+            <div><a href="{% url 'blogs:post_detail' post.id %}"><b>{{ post.header }}</b></a></div>
+            <div>Author: {{ post.author }}, {{ post.created_at }}</div>
+            <div>{{ post.description }}</div>
+        </div>
+        <hr>
+   {% endfor %}
+
+{% endblock %}

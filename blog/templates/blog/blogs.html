@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+{% block title %}List of blogs{% endblock %}
+
+{% block content %}
+    {% for blog in object_list %}
+        <div>
+            <div><a href="{% url 'blogs:blog_detail' blog.id %}">
+                <h2>{{ blog.title }}</h2>
+            </a></div>
+            <div>Author: {{ blog.author }}</div>
+            <br>
+            <div>{{ blog.description }}</div>
+            <br>
+            <div>Created: {{ blog.created_at }}</div>
+            <div>Last update: {{ blog.updated_at }}</div>
+        <hr>
+        </div>
+    {% endfor %}
+   <a href="/">Back</a>
+{% endblock %}

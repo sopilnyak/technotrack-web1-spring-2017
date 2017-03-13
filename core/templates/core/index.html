@@ -1,0 +1,8 @@
+{% extends "core/base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+    <div>There are currently {{ blogs_number }} blogs,
+        {{ posts_number }} posts,
+        {{ comments_number }} comments.</div>
+    <div><a href="{% url "blogs:blogs" %}">All blogs</a></div>
+{% endblock %}

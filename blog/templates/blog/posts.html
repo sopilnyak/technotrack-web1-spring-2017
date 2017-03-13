@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{% block title %}Post{% endblock %}
+
+{% block content %}
+    {% for post in post_set.all %}
+        <div>
+            <div>Blog: {{ post.blog.title }}</div>
+            <div>Author: {{ post.author }}</div>
+        <hr>
+        </div>
+    {% endfor %}
+{% endblock %}
