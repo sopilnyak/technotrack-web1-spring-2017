@@ -126,3 +126,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'core.User'
+
+LOGIN_REDIRECT_URL = "blogs:blogs"
+LOGIN_URL = "login"
+
+ACCOUNT_ACTIVATION_DAYS = 7

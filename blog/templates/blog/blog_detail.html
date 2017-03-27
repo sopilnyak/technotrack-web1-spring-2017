@@ -4,12 +4,19 @@
 {% block content %}
     <div style="background: #eee; padding: 15px;">
         <div><h2>{{ blog.title }}</h2></div>
+        <div><h4>{{ blog.category.title }}</h4></div>
         <div><b>{{ blog.author }}</b>, {{ blog.created_at }}</div>
         <div>Last updated at {{ blog.updated_at }}</div>
         <br>
         <div>{{ blog.description }}</div>
     </div>
+
+    {% if blog.author == user %}
+    <a href="{% url 'blogs:edit_blog' blog.id %}">Edit blog</a><br>
+    {% endif %}
+
     <a href="{% url 'blogs:blogs' %}">Back</a>
+
     <hr>
 
     {% for post in object.post_set.all %}

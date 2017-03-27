@@ -2,23 +2,49 @@
 {% block title %}{{ blog.title }}{% endblock %}
 
 {% block content %}
-   <div style="background: #eee">
+   <div style="background: #eee; padding: 20px;">
        <div><h2>{{ post.header }}</h2></div>
        <div><b>{{ post.author }}</b>, {{ post.created_at }}</div>
        <div><b>Blog: {{ post.blog.title }}</b></div>
        <div>Last updated on {{ post.updated_at }}</div>
        <br>
        <div>{{ post.description }}</div>
+       <br>
+       <div>{{ post.text }}</div>
+           <br>
+           <div>
+               Rating: {{ post.rating }}
+               <form name="like" method='post' action="{% url 'blogs:like' post.id %}">
+                   {% csrf_token %}
+                   <input type="submit" value="+" />
+               </form>
+           </div>
    </div><br>
-   <a href="/blogs/">Back</a>
+
+   {% if post.author == user %}
+       <a href="{% url 'blogs:edit_post' post.id %}">Edit post</a><br>
+   {% endif %}
+
+   <a href="{% url 'blogs:blog_detail' post.blog.id %}">Back</a>
+   <br>
 
    <b>Comments:</b>
-   {% for comment in object.comment_set.all %}
+
+        <hr>
+   {% for comment in comment_set.all %}
         <div>
             <div><b>{{ comment.author }}</b> {{ comment.date }}</div>
             <div>{{ comment.text }}</div>
         <hr>
         </div>
    {% endfor %}
+
+   <b>Add a comment:</b>
+
+    <form method="post" action="">
+    {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Post" />
+    </form>
 
 {% endblock %}

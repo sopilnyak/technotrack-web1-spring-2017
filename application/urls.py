@@ -16,9 +16,13 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from core.views import HomePageView
+from django.contrib.auth.views import login, logout
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', HomePageView.as_view(), name="home"),
     url(r'^blogs', include('blog.urls', namespace="blogs")),
+    url(r'^login', login, {'template_name': 'core/login.html'}, name="login"),
+    url(r'^logout/', logout, {'template_name': 'core/logout.html'}, name="logout"),
+    url(r'^', include('registration.backends.hmac.urls'), {'send_email': False}),
 ]
