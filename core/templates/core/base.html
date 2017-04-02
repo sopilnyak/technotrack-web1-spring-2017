@@ -2,9 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'core/base.css' %}">
+    {% block extra %} {% endblock %}
+
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body>
-    <div style="margin: 50px 20% 50px 20%">{% block content %} {% endblock %}</div>
+    <nav class="navbar navbar-default custom-header">
+        <div class="container-fluid">
+            <div class="nav navbar-nav navbar-header">
+                <a class="navbar-brand" href="{% url 'home' %}">Blogs & posts</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                {% block extra-nav %}
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a href="{% url 'blogs:blogs' %}">Blogs</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        {% if user.is_authenticated %}
+                            <a href="{% url "logout" %}">Logout</a>
+                        {% else %}
+                            <a href="{% url "login" %}">Sign in</a>
+                    </li>
+                    <li>
+                            <a href="{% url "signup" %}">Sign up</a>
+                        {% endif %}
+                    </li>
+                </ul>
+                {% endblock %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %} {% endblock %}
+    </div>
+
+
+    <footer class="footer panel-footer">Blogs & posts company &copy; {% now "Y" %}</footer>
 </body>
 </html>

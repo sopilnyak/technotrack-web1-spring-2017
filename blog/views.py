@@ -1,6 +1,9 @@
+from django.forms import TextInput, Textarea
+from django.forms.models import ModelForm
+from django.urls import reverse_lazy
+
 from .models import Blog
 from .models import Post
-from .models import Category
 from comments.models import Comment
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -9,12 +12,24 @@ from django.shortcuts import get_object_or_404, render
 from django import forms
 
 
+class CreateForm(ModelForm):
+    class Meta:
+        model = Blog
+        fields = ('title', 'description', 'category')
+        widgets = {
+            'title': TextInput(),
+        }
+
+
 class CreateBlog(CreateView):
 
     template_name = 'blog/create_blog.html'
     model = Blog
-    fields = ('title', 'description', 'category')
-    success_url = '/blogs/'
+    success_url = reverse_lazy('blogs:blogs')
+    form_class = CreateForm
+
+    #def get_success_url(self):
+    #    return reverse('blogs:blog_detail', (self.object.pk, ))
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -25,8 +40,8 @@ class EditBlog(UpdateView):
 
     template_name = 'blog/edit_blog.html'
     model = Blog
-    fields = ('title', 'description', 'category')
     success_url = '../'
+    form_class = CreateForm
 
     def form_valid(self, form):
         return super(EditBlog, self).form_valid(form)
@@ -42,7 +57,14 @@ class BlogList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(BlogList, self).get_context_data(**kwargs)
+        context['sort'] = self.request.GET.get('orderby', 'id')
         return context
+
+    def get_queryset(self):
+        key = self.request.GET.get('orderby', 'id')
+        if key not in ['title', 'id']:
+            key = 'id'
+        return Blog.objects.order_by(key)
 
 
 class BlogDetail(DetailView):
@@ -75,12 +97,21 @@ class EditPost(UpdateView):
         return super(EditPost, self).get_queryset().filter(author=self.request.user)
 
 
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
+        widgets = {
+            'text': Textarea(attrs={'rows': '2'}),
+        }
+
+
 class PostDetail(CreateView):
 
     template_name = 'blog/post_detail.html'
     model = Comment
-    fields = ('text',)
     success_url = '.'
+    form_class = CommentForm
 
     def dispatch(self, request, pk=None, *args, **kwargs):
         self.postobject = get_object_or_404(Post, id=pk)

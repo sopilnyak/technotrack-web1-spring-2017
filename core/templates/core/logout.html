@@ -1,4 +1,25 @@
 {% extends "core/base.html" %}
+{% block title %}Logout{% endblock %}
+
+{% block extra-nav %}
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <a href="{% url 'blogs:blogs' %}">Blogs</a>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="active">
+            {% if user.is_authenticated %}
+            <a href="{% url "logout" %}">Logout</a>
+            {% else %}
+            <a href="{% url "login" %}">Sign in</a>
+        </li>
+        <li>
+            <a href="{% url "signup" %}">Sign up</a>
+            {% endif %}
+        </li>
+    </ul>
+{% endblock %}
 
 {% block content %}
 

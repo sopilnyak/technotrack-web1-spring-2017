@@ -2,28 +2,37 @@
 {% block title %}{{ blog.title }}{% endblock %}
 
 {% block content %}
-    <div style="background: #eee; padding: 15px;">
-        <div><h2>{{ blog.title }}</h2></div>
-        <div><h4>{{ blog.category.title }}</h4></div>
-        <div><b>{{ blog.author }}</b>, {{ blog.created_at }}</div>
+    <ol class="breadcrumb">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'blogs:blogs' %}">Blogs</a></li>
+        <li class="active">{{ blog.title }}</li>
+    </ol>
+
+    {% if blog.author == user %}
+    <a href="{% url 'blogs:edit_blog' blog.id %}" class="btn btn-primary">Edit blog</a><br>
+    {% endif %}
+
+    <div class="container">
+        <div><h3>{{ blog.title }}</h3></div>
+        <div><h4>{{ blog.category.all|join:', ' }}</h4></div>
+        <div><strong>{{ blog.author }}</strong>, {{ blog.created_at }}</div>
         <div>Last updated at {{ blog.updated_at }}</div>
         <br>
         <div>{{ blog.description }}</div>
     </div>
 
-    {% if blog.author == user %}
-    <a href="{% url 'blogs:edit_blog' blog.id %}">Edit blog</a><br>
-    {% endif %}
-
-    <a href="{% url 'blogs:blogs' %}">Back</a>
-
     <hr>
 
-    {% for post in object.post_set.all %}
+    {% if blog.author == user %}
+        <a href="{% url "blogs:create_post" blog.id %}" class="btn btn-primary btn-block">Add new post</a>
+        <br>
+    {% endif %}
+
+    {% for post in object.post_set.all reversed %}
         <div>
             <div><a href="{% url 'blogs:post_detail' post.id %}"><b>{{ post.header }}</b></a></div>
             <div>Author: {{ post.author }}, {{ post.created_at }}</div>
-            <div>{{ post.description }}</div>
+            <article>{{ post.description }}</article>
         </div>
         <hr>
     {% endfor %}

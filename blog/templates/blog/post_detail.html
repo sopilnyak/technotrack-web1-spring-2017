@@ -2,49 +2,71 @@
 {% block title %}{{ blog.title }}{% endblock %}
 
 {% block content %}
-   <div style="background: #eee; padding: 20px;">
-       <div><h2>{{ post.header }}</h2></div>
-       <div><b>{{ post.author }}</b>, {{ post.created_at }}</div>
-       <div><b>Blog: {{ post.blog.title }}</b></div>
+    <ol class="breadcrumb">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'blogs:blogs' %}">Blogs</a></li>
+        <li><a href="{% url 'blogs:blog_detail' post.blog.id %}">{{ post.blog.title }}</a></li>
+        <li class="active">{{ post.header }}</li>
+    </ol>
+
+   {% if post.author == user %}
+       <a href="{% url 'blogs:edit_post' post.id %}" class="btn btn-primary">Edit post</a><br><br>
+   {% endif %}
+
+    <div class="container panel panel-default">
+       <div><h3>{{ post.header }}</h3></div>
+       <div><strong>{{ post.author }}</strong>, {{ post.created_at }}</div>
        <div>Last updated on {{ post.updated_at }}</div>
        <br>
        <div>{{ post.description }}</div>
        <br>
-       <div>{{ post.text }}</div>
+       <article class="container">{{ post.text }}</article>
            <br>
            <div>
-               Rating: {{ post.rating }}
-               <form name="like" method='post' action="{% url 'blogs:like' post.id %}">
+               Rating:
+               <span class="badge">
+                   {{ post.rating }}
+               </span>
+               <!--<form name="like" method='post' action="{% url 'blogs:like' post.id %}">
                    {% csrf_token %}
                    <input type="submit" value="+" />
-               </form>
+               </form>-->
            </div>
-   </div><br>
+   </div>
 
-   {% if post.author == user %}
-       <a href="{% url 'blogs:edit_post' post.id %}">Edit post</a><br>
-   {% endif %}
+   <strong>Add a comment:</strong>
 
-   <a href="{% url 'blogs:blog_detail' post.blog.id %}">Back</a>
-   <br>
+    {% load widget_tweaks %}
+    <form method="post" action="{% url "blogs:create_blog" %}">
+    {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            {{ field|add_class:"form-control" }}
+            {% if field.help_text %}
+                <div class="btn btn-info">{{ field.help_text }}</div>
+            {% endif %}
+            {% if field.errors %}
+                <br><br>
+                <div class="alert alert-danger">{{ field.errors }}</div>
+            {% endif %}
 
-   <b>Comments:</b>
+        </div>
+        {% endfor %}
+        <div class="form-group">
+            <input type="submit" value="Post" class="btn btn-default" />
+        </div>
+        <br>
+    </form>
+
+   <h4>Comments:</h4>
 
         <hr>
-   {% for comment in comment_set.all %}
+   {% for comment in comment_set.all reversed %}
         <div>
             <div><b>{{ comment.author }}</b> {{ comment.date }}</div>
             <div>{{ comment.text }}</div>
         <hr>
         </div>
    {% endfor %}
-
-   <b>Add a comment:</b>
-
-    <form method="post" action="">
-    {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Post" />
-    </form>
 
 {% endblock %}

@@ -2,10 +2,29 @@
 
 {% block content %}
 
+    <h3 class="page-header">Edit post</h3>
+
+{% load widget_tweaks %}
     <form method="post">
     {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Edit post" />
+        {% for field in form %}
+        <div class="form-group">
+            {{ field.label_tag }}<br>
+            {{ field|add_class:"form-control" }}
+            {% if field.help_text %}
+                <div class="btn btn-info">{{ field.help_text }}</div>
+            {% endif %}
+            {% if field.errors %}
+                <br><br>
+                <div class="alert alert-danger">{{ field.errors }}</div>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+        <div class="form-group">
+            <input type="submit" value="Edit post" class="btn btn-default" />
+        </div>
+        <br><br>
     </form>
 
 {% endblock %}

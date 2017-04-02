@@ -1,3 +1,7 @@
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 from django.views.generic.base import TemplateView
 
 from blog.models import Blog
@@ -16,3 +20,18 @@ class HomePageView(TemplateView):
         context['posts_number'] = Post.objects.all().count()
         context['comments_number'] = Comment.objects.all().count()
         return context
+
+
+class UserForm(UserCreationForm):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'password1', 'password2')
+
+
+class CreateUser(CreateView):
+
+    template_name = 'registration/registration_form.html'
+    model = get_user_model()
+    form_class = UserForm
+    success_url = reverse_lazy('home')

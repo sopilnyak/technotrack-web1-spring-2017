@@ -7,8 +7,10 @@ from .models import User
 class UserAdmin(BaseUserAdmin):
 
     fieldsets = BaseUserAdmin.fieldsets + (
-        (u'See more', {'fields': ('admin_avatar', 'avatar')}),
+        (u'See more', {'fields': ('avatar', 'admin_avatar')}),
     )
+
+    readonly_fields = ('admin_avatar', )
 
     def admin_avatar(self, instance):
         return instance.avatar and u'<img src="{0}" width="100px" />'.format(

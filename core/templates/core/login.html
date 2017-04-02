@@ -1,26 +1,52 @@
 {% extends "core/base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block extra-nav %}
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <a href="{% url 'blogs:blogs' %}">Blogs</a>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="active">
+            {% if user.is_authenticated %}
+            <a href="{% url "logout" %}">Logout</a>
+            {% else %}
+            <a href="{% url "login" %}">Sign in</a>
+        </li>
+        <li>
+            <a href="{% url "signup" %}">Sign up</a>
+            {% endif %}
+        </li>
+    </ul>
+{% endblock %}
 
 {% block content %}
 
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
-
-<input type="submit" value="Log in" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
-
 {% if form.errors %}
-    <p>Wrong username or password!</p>
+    <div class="btn btn-danger container">Wrong username or password!</div>
+    <br><br>
 {% endif %}
+
+{% load widget_tweaks %}
+<form method="post" action="{% url 'login' %}" class="form-inline">
+    {% csrf_token %}
+    <div class="form-group">
+            {{ form.username.label_tag }}<br>
+            {{ form.username|add_class:"form-control" }}
+    </div>
+    <br>
+    <br>
+    <div class="form-group">
+            {{ form.password.label_tag }}<br>
+            {{ form.password|add_class:"form-control" }}
+    </div>
+    <br>
+    <br>
+    <div class="form-group">
+        <input type="submit" class="btn btn-default" value="Log in" />
+        <input type="hidden" name="next" value="{{ next }}" />
+    </div>
+</form>
 
 {% endblock %}

@@ -1,15 +1,11 @@
 {% extends "core/base.html" %}
 {% block title %}Welcome{% endblock %}
 {% block content %}
-    <div>There are currently {{ blogs_number }} blogs,
-        {{ posts_number }} posts,
-        {{ comments_number }} comments.</div>
-    <div><a href="{% url "blogs:blogs" %}">All blogs</a></div>
-
-    {% if user.is_authenticated %}
-        <p>Welcome, {{ user.username }}! <a href="{% url "logout" %}">Logout</a>.</p>
-    {% else %}
-        <div><a href="/register/">Register</a></div>
-        <div><a href="{% url "login" %}">Login</a></div>
-    {% endif %}
+    <h1>Welcome to blogs & posts!</h1>
+    There are currently
+    <strong>{{ blogs_number }}</strong> blogs,
+    <strong>{{ posts_number }}</strong> posts,
+    <strong>{{ comments_number }}</strong> comments.
+    <br><br>
+    <a type="button" class="btn btn-primary btn-block" href="{% url 'blogs:blogs' %}">Go to blog list</a>
 {% endblock %}
