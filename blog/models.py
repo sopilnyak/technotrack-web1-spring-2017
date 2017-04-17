@@ -19,6 +19,9 @@ class Blog(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     category = models.ManyToManyField(Category, default=None)
 
+    def __unicode__(self):
+        return self.title
+
 
 class Post(models.Model):
     header = models.CharField(max_length=100)
@@ -28,12 +31,18 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     blog = models.ForeignKey(Blog)
-    rating = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return self.header
 
 
-class Like(models.Model):
+class Rating(models.Model):
     value = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     post = models.ForeignKey(Post)
+
+
+class PostLike(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL)
+    post = models.ForeignKey(Post)
+

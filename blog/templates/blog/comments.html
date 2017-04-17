@@ -1,0 +1,9 @@
+{% for comment in comment_set.all reversed %}
+    <div>
+        <div><b>{{ comment.author }}</b> {{ comment.date }}</div>
+        <div>{{ comment.text }}</div>
+        <hr>
+    </div>
+{% empty %}
+    Be the first to comment this.
+{% endfor %}

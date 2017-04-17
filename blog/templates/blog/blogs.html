@@ -23,26 +23,12 @@
 
 {% block content %}
 
-    <div class="alert alert-info alert-dismissable">
+    <div class="row">
 
-    {% if user.is_authenticated %}
-        <p>Welcome, <strong>{{ user.username }}</strong>!
-            <a href="{% url "logout" %}" class="alert-link">Logout</a>.</p>
-    {% else %}
-        Welcome! Please
-        <a href="{% url "login" %}" class="alert-link">sign in</a> or
-        <a href="{% url "signup" %}" class="alert-link">sign up</a>
-        to post anything.
-    {% endif %}
-    </div>
-
-    {% if user.is_authenticated %}
-        <a href="{% url "blogs:create_blog" %}" class="btn btn-primary btn-block">Create blog</a>
-        <br>
-    {% endif %}
+    <div class="col-md-8">
 
     {% for blog in object_list %}
-        <div class="panel panel-default container">
+        <div class="panel panel-default container-fluid">
             <div><a href="{% url 'blogs:blog_detail' blog.id %}">
                 <h3>{{ blog.title }}</h3>
             </a></div>
@@ -64,5 +50,36 @@
             <br>
         </div>
     {% endfor %}
+
+    </div>
+
+    <div class="col-md-4">
+
+    <div class="container-fluid alert alert-info alert-dismissable">
+
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+
+    {% if user.is_authenticated %}
+        <p>Welcome, <strong>{{ user.username }}</strong>!
+            <a href="{% url "logout" %}" class="alert-link">Logout</a>.</p>
+    {% else %}
+        Welcome! Please
+        <a data-url="{% url "login" %}" class="alert-link sign-in-button"
+           data-toggle="modal" data-target="#sign-in">sign in</a> or
+        <a href="{% url "signup" %}" class="alert-link">sign up</a>
+        to post anything.
+    {% endif %}
+    </div>
+
+    {% if user.is_authenticated %}
+        <a href="{% url "blogs:create_blog" %}" class="btn btn-primary btn-block">Create blog</a>
+        <br><br>
+    {% endif %}
+
+    </div>
+
+    </div>
 
 {% endblock %}

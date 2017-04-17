@@ -10,3 +10,6 @@ class Comment(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     post = models.ForeignKey(Post)
+
+    def __unicode__(self):
+        return self.text

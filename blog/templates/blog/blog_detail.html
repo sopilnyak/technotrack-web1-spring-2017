@@ -8,11 +8,15 @@
         <li class="active">{{ blog.title }}</li>
     </ol>
 
+    <div class="row">
+
+    <div class="col-md-8">
+
     {% if blog.author == user %}
     <a href="{% url 'blogs:edit_blog' blog.id %}" class="btn btn-primary">Edit blog</a><br>
     {% endif %}
 
-    <div class="container">
+    <div class="container-fluid">
         <div><h3>{{ blog.title }}</h3></div>
         <div><h4>{{ blog.category.all|join:', ' }}</h4></div>
         <div><strong>{{ blog.author }}</strong>, {{ blog.created_at }}</div>
@@ -23,11 +27,6 @@
 
     <hr>
 
-    {% if blog.author == user %}
-        <a href="{% url "blogs:create_post" blog.id %}" class="btn btn-primary btn-block">Add new post</a>
-        <br>
-    {% endif %}
-
     {% for post in object.post_set.all reversed %}
         <div>
             <div><a href="{% url 'blogs:post_detail' post.id %}"><b>{{ post.header }}</b></a></div>
@@ -36,5 +35,17 @@
         </div>
         <hr>
     {% endfor %}
+
+    </div>
+    <div class="col-md-4">
+
+        {% if blog.author == user %}
+            <a href="{% url "blogs:create_post" blog.id %}" class="btn btn-primary btn-block">Add new post</a>
+            <br>
+        {% endif %}
+
+        Здесь могла быть ваша реклама.
+    </div>
+    </div>
 
 {% endblock %}

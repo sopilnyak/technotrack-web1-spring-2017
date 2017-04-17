@@ -10,5 +10,7 @@ urlpatterns = [
     url(r'^/(?P<pk>[-\w]+)/edit/$', login_required(EditBlog.as_view()), name="edit_blog"),
     url(r'^/(?P<pk>[-\w]+)/post/$', login_required(CreatePost.as_view()), name="create_post"),
     url(r'^/posts/(?P<pk>[-\w]+)/edit/$', login_required(EditPost.as_view()), name="edit_post"),
-    url(r'^/posts/(?P<pk>[-\w]+)/like/$', like, name='like'),
+    url(r'^/posts/(?P<pk>[-\w]+)/comments/$', PostCommentsView.as_view(), name='post_comments'),
+    url(r'^/posts/(?P<pk>[-\w]+)/post/$', PostContainerView.as_view(), name='post_container'),
+    url(r'^/posts/(?P<pk>[-\w]+)/like/$', PostLikeAjaxView.as_view(), name='like')
 ]

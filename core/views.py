@@ -35,3 +35,4 @@ class CreateUser(CreateView):
     model = get_user_model()
     form_class = UserForm
     success_url = reverse_lazy('home')
+

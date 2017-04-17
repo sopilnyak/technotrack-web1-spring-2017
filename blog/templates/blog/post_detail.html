@@ -1,7 +1,13 @@
 {% extends "core/base.html" %}
 {% block title %}{{ blog.title }}{% endblock %}
 
+{% load static %}
+{% block extra %}
+    <script type="text/javascript" src="{% static 'core/js/post_detail.js' %}"></script>
+{% endblock %}
+
 {% block content %}
+
     <ol class="breadcrumb">
         <li><a href="{% url 'home' %}">Home</a></li>
         <li><a href="{% url 'blogs:blogs' %}">Blogs</a></li>
@@ -9,64 +15,64 @@
         <li class="active">{{ post.header }}</li>
     </ol>
 
-   {% if post.author == user %}
-       <a href="{% url 'blogs:edit_post' post.id %}" class="btn btn-primary">Edit post</a><br><br>
-   {% endif %}
+    <div class="row">
 
-    <div class="container panel panel-default">
-       <div><h3>{{ post.header }}</h3></div>
-       <div><strong>{{ post.author }}</strong>, {{ post.created_at }}</div>
-       <div>Last updated on {{ post.updated_at }}</div>
-       <br>
-       <div>{{ post.description }}</div>
-       <br>
-       <article class="container">{{ post.text }}</article>
-           <br>
-           <div>
-               Rating:
-               <span class="badge">
-                   {{ post.rating }}
-               </span>
-               <!--<form name="like" method='post' action="{% url 'blogs:like' post.id %}">
-                   {% csrf_token %}
-                   <input type="submit" value="+" />
-               </form>-->
-           </div>
-   </div>
+    <div class="col-md-8">
 
-   <strong>Add a comment:</strong>
+    <div id="edit-area" data-url="{% url 'blogs:edit_post' post.id %}" >
+
+        {% include 'blog/post_container.html' %}
+    </div>
+
+    {% if user.is_authenticated %}
+
+    <strong>Add a comment:</strong>
 
     {% load widget_tweaks %}
-    <form method="post" action="{% url "blogs:create_blog" %}">
-    {% csrf_token %}
+    <form method="post" action="" class="ajaxform-comment" data-url="{% url 'blogs:post_detail' pk=post.id %}">
+        {% csrf_token %}
         {% for field in form %}
-        <div class="form-group">
-            {{ field|add_class:"form-control" }}
-            {% if field.help_text %}
-                <div class="btn btn-info">{{ field.help_text }}</div>
-            {% endif %}
-            {% if field.errors %}
-                <br><br>
-                <div class="alert alert-danger">{{ field.errors }}</div>
-            {% endif %}
+            <div class="form-group">
+                {{ field|add_class:"form-control" }}
+                {% if field.help_text %}
+                    <div class="btn btn-info">{{ field.help_text }}</div>
+                {% endif %}
+                {% if field.errors %}
+                    <br><br>
+                    <div class="alert alert-danger">{{ field.errors }}</div>
+                {% endif %}
 
-        </div>
+            </div>
         {% endfor %}
         <div class="form-group">
-            <input type="submit" value="Post" class="btn btn-default" />
+            <input type="submit" value="Post" class="btn btn-default"/>
         </div>
         <br>
     </form>
 
-   <h4>Comments:</h4>
-
-        <hr>
-   {% for comment in comment_set.all reversed %}
-        <div>
-            <div><b>{{ comment.author }}</b> {{ comment.date }}</div>
-            <div>{{ comment.text }}</div>
-        <hr>
+    {% else %}
+        <div class="alert alert-danger">
+            Please
+            <a data-url="{% url "login" %}" class="alert-link sign-in-button"
+               data-toggle="modal" data-target="#sign-in">sign in</a> or
+            <a href="{% url "signup" %}" class="alert-link">sign up</a>
+            to leave a comment!
         </div>
-   {% endfor %}
+
+    {% endif %}
+
+    <h4>Comments:</h4>
+
+    <hr>
+
+    <div id="comments" data-url="{% url 'blogs:post_comments' pk=post.id %}">
+        {% include "blog/comments.html" %}
+    </div>
+
+    </div>
+    <div class="col-md-4">
+        Здесь могла быть ваша реклама.
+    </div>
+    </div>
 
 {% endblock %}

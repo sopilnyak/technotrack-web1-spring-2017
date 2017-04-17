@@ -1,0 +1,27 @@
+{% load static %}
+    <script type="text/javascript" src="{% static 'core/js/edit_post.js' %}"></script>
+
+{% if post.author == user %}
+    <a id="edit-button" class="btn btn-primary">Edit post</a><br><br>
+{% endif %}
+
+<div class="container-fluid panel panel-default">
+    <div><h3>{{ post.header }}</h3></div>
+    <div><strong>{{ post.author }}</strong>, {{ post.created_at }}</div>
+    <div>Last updated on {{ post.updated_at }}</div>
+    <br>
+    <div>{{ post.description }}</div>
+    <br>
+    <article class="container-fluid">{{ post.text }}</article>
+    <br>
+
+    <div>
+        Rating:
+        <span id="likes-{{ post.id }}" class="badge">{{ like_number }}</span>
+
+        {% if user.is_authenticated %}
+            <button class="btn badge ajax-like" data-url="{% url "blogs:like" pk=post.id %}"
+                    data-postid="{{ post.id }}">{{ like_status }}</button>
+        {% endif %}
+    </div>
+</div>
